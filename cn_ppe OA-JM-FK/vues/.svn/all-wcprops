@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 29
+/repos/cn_ppe/!svn/ver/1/vues
+END
+v_direction.php
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/repos/cn_ppe/!svn/ver/1/vues/v_direction.php
+END
+v_contact.php
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/repos/cn_ppe/!svn/ver/1/vues/v_contact.php
+END
+v_details.php
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/repos/cn_ppe/!svn/ver/1/vues/v_details.php
+END
+v_accueil.php
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/repos/cn_ppe/!svn/ver/1/vues/v_accueil.php
+END
+v_erreurs.php
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/repos/cn_ppe/!svn/ver/1/vues/v_erreurs.php
+END
+v_deconnexion.php
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/repos/cn_ppe/!svn/ver/1/vues/v_deconnexion.php
+END
+v_visiteur.php
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/repos/cn_ppe/!svn/ver/1/vues/v_visiteur.php
+END
+v_sommaire.php
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/repos/cn_ppe/!svn/ver/1/vues/v_sommaire.php
+END
+v_connexion.php
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/repos/cn_ppe/!svn/ver/1/vues/v_connexion.php
+END
+v_pied.php
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/repos/cn_ppe/!svn/ver/1/vues/v_pied.php
+END
+v_commercial.php
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/repos/cn_ppe/!svn/ver/1/vues/v_commercial.php
+END
+v_entete.php
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/repos/cn_ppe/!svn/ver/1/vues/v_entete.php
+END
+v_client.php
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/repos/cn_ppe/!svn/ver/1/vues/v_client.php
+END

@@ -1,0 +1,856 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.2.0
+-- Dumped by pg_dump version 9.2.0
+-- Started on 2012-10-18 15:44:37
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- TOC entry 184 (class 3079 OID 11727)
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- TOC entry 2071 (class 0 OID 0)
+-- Dependencies: 184
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 168 (class 1259 OID 319534)
+-- Name: agence; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE agence (
+    id integer NOT NULL,
+    nom character varying(50),
+    adresse character varying(50),
+    cp character varying(5),
+    ville character varying(50)
+);
+
+
+ALTER TABLE public.agence OWNER TO postgres;
+
+--
+-- TOC entry 170 (class 1259 OID 319544)
+-- Name: client; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE client (
+    id integer NOT NULL,
+    "nomClient" character varying(50),
+    "prenomClient" character varying(50),
+    "adresseClient" character varying(150),
+    "cpClient" character varying(5),
+    "villeClient" character varying(50),
+    "mailClient" character varying(50),
+    login character varying(50),
+    mdp integer,
+    "typeUtilisateur" integer
+);
+
+
+ALTER TABLE public.client OWNER TO postgres;
+
+--
+-- TOC entry 182 (class 1259 OID 319721)
+-- Name: commerciale; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE commerciale (
+    id_visite integer NOT NULL,
+    "dateVisite_visite" timestamp without time zone DEFAULT now() NOT NULL,
+    description_visite character varying(500),
+    id_projet integer
+);
+
+
+ALTER TABLE public.commerciale OWNER TO postgres;
+
+--
+-- TOC entry 180 (class 1259 OID 319695)
+-- Name: contact; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE contact (
+    id integer NOT NULL,
+    "dateContact" timestamp without time zone DEFAULT now() NOT NULL,
+    resume character varying(200),
+    id_client integer
+);
+
+
+ALTER TABLE public.contact OWNER TO postgres;
+
+--
+-- TOC entry 179 (class 1259 OID 319681)
+-- Name: contrainte; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE contrainte (
+    id integer NOT NULL,
+    descriptif character varying(500),
+    plan character varying(200),
+    id_specialiste integer
+);
+
+
+ALTER TABLE public.contrainte OWNER TO postgres;
+
+--
+-- TOC entry 177 (class 1259 OID 319646)
+-- Name: envisager; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE envisager (
+    etendue integer,
+    priorite integer,
+    id_secteur integer NOT NULL,
+    id_projet integer NOT NULL
+);
+
+
+ALTER TABLE public.envisager OWNER TO postgres;
+
+--
+-- TOC entry 178 (class 1259 OID 319662)
+-- Name: examiner; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE examiner (
+    "compteRendu" character varying(500),
+    id_visite integer NOT NULL,
+    id_specialiste integer NOT NULL
+);
+
+
+ALTER TABLE public.examiner OWNER TO postgres;
+
+--
+-- TOC entry 173 (class 1259 OID 319568)
+-- Name: personnel; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE personnel (
+    id integer NOT NULL,
+    nom character varying(50),
+    prenom character varying(50),
+    mail character varying(100),
+    telephone character varying(10),
+    mdp character varying(200),
+    id_agence integer,
+    login character varying(50),
+    "typeUtilisateur" integer
+);
+
+
+ALTER TABLE public.personnel OWNER TO postgres;
+
+--
+-- TOC entry 174 (class 1259 OID 319579)
+-- Name: projet; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE projet (
+    id integer NOT NULL,
+    budget double precision,
+    descriptif character varying(500),
+    precisions character varying(1500),
+    "rechercheTerrain" boolean,
+    id_terrain integer,
+    id_personnel integer,
+    id_personnel1 integer,
+    id_client integer
+);
+
+
+ALTER TABLE public.projet OWNER TO postgres;
+
+--
+-- TOC entry 181 (class 1259 OID 319707)
+-- Name: proposition; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE proposition (
+    id integer NOT NULL,
+    tarif double precision,
+    plan character varying(200),
+    "valideOK" boolean,
+    descriptif character varying(500),
+    id_visite integer
+);
+
+
+ALTER TABLE public.proposition OWNER TO postgres;
+
+--
+-- TOC entry 169 (class 1259 OID 319539)
+-- Name: secteur; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE secteur (
+    id integer NOT NULL,
+    descriptif character varying(200),
+    latitude double precision,
+    longitude double precision,
+    "codePostal" character varying(5)
+);
+
+
+ALTER TABLE public.secteur OWNER TO postgres;
+
+--
+-- TOC entry 172 (class 1259 OID 319563)
+-- Name: specialiste; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE specialiste (
+    id integer NOT NULL,
+    metier character varying(50)
+);
+
+
+ALTER TABLE public.specialiste OWNER TO postgres;
+
+--
+-- TOC entry 176 (class 1259 OID 319626)
+-- Name: technique; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE technique (
+    id_visite integer NOT NULL,
+    "dateVisite_visite" timestamp without time zone DEFAULT now() NOT NULL,
+    description_visite character varying(500),
+    id_projet integer
+);
+
+
+ALTER TABLE public.technique OWNER TO postgres;
+
+--
+-- TOC entry 171 (class 1259 OID 319549)
+-- Name: terrain; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE terrain (
+    id integer NOT NULL,
+    latitude double precision,
+    longitude double precision,
+    superficie integer,
+    plan character varying(500),
+    prix double precision,
+    id_secteur integer
+);
+
+
+ALTER TABLE public.terrain OWNER TO postgres;
+
+--
+-- TOC entry 183 (class 1259 OID 319742)
+-- Name: typeUtilisateur; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE "typeUtilisateur" (
+    "idUtilisateur" integer,
+    "nomUtilisateur" character varying(50)
+);
+
+
+ALTER TABLE public."typeUtilisateur" OWNER TO postgres;
+
+--
+-- TOC entry 175 (class 1259 OID 319611)
+-- Name: visite; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE visite (
+    id integer NOT NULL,
+    "dateVisite" timestamp without time zone DEFAULT now() NOT NULL,
+    description character varying(500),
+    id_projet integer
+);
+
+
+ALTER TABLE public.visite OWNER TO postgres;
+
+--
+-- TOC entry 2048 (class 0 OID 319534)
+-- Dependencies: 168
+-- Data for Name: agence; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2050 (class 0 OID 319544)
+-- Dependencies: 170
+-- Data for Name: client; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO client VALUES (1, 'toto', 'tata', '1 alle du port', '11111', 'Bar', NULL, 'toto', 1234, 3);
+
+
+--
+-- TOC entry 2062 (class 0 OID 319721)
+-- Dependencies: 182
+-- Data for Name: commerciale; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2060 (class 0 OID 319695)
+-- Dependencies: 180
+-- Data for Name: contact; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2059 (class 0 OID 319681)
+-- Dependencies: 179
+-- Data for Name: contrainte; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2057 (class 0 OID 319646)
+-- Dependencies: 177
+-- Data for Name: envisager; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2058 (class 0 OID 319662)
+-- Dependencies: 178
+-- Data for Name: examiner; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2053 (class 0 OID 319568)
+-- Dependencies: 173
+-- Data for Name: personnel; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO personnel VALUES (1, 'taya', 'toyo', NULL, NULL, '1234', NULL, 'taya', 1);
+INSERT INTO personnel VALUES (2, 'tata', 'tata', NULL, NULL, '1234', NULL, 'tata', 2);
+
+
+--
+-- TOC entry 2054 (class 0 OID 319579)
+-- Dependencies: 174
+-- Data for Name: projet; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2061 (class 0 OID 319707)
+-- Dependencies: 181
+-- Data for Name: proposition; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2049 (class 0 OID 319539)
+-- Dependencies: 169
+-- Data for Name: secteur; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2052 (class 0 OID 319563)
+-- Dependencies: 172
+-- Data for Name: specialiste; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2056 (class 0 OID 319626)
+-- Dependencies: 176
+-- Data for Name: technique; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2051 (class 0 OID 319549)
+-- Dependencies: 171
+-- Data for Name: terrain; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2063 (class 0 OID 319742)
+-- Dependencies: 183
+-- Data for Name: typeUtilisateur; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "typeUtilisateur" VALUES (1, 'Direction');
+INSERT INTO "typeUtilisateur" VALUES (2, 'Commercial');
+INSERT INTO "typeUtilisateur" VALUES (3, 'Client');
+
+
+--
+-- TOC entry 2055 (class 0 OID 319611)
+-- Dependencies: 175
+-- Data for Name: visite; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 1987 (class 2606 OID 319538)
+-- Name: agence_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY agence
+    ADD CONSTRAINT agence_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1991 (class 2606 OID 319548)
+-- Name: client_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY client
+    ADD CONSTRAINT client_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2029 (class 2606 OID 319729)
+-- Name: commerciale_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY commerciale
+    ADD CONSTRAINT commerciale_pkey PRIMARY KEY (id_visite);
+
+
+--
+-- TOC entry 2023 (class 2606 OID 319700)
+-- Name: contact_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY contact
+    ADD CONSTRAINT contact_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2020 (class 2606 OID 319688)
+-- Name: contrainte_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY contrainte
+    ADD CONSTRAINT contrainte_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2014 (class 2606 OID 319650)
+-- Name: envisager_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY envisager
+    ADD CONSTRAINT envisager_pkey PRIMARY KEY (id_secteur, id_projet);
+
+
+--
+-- TOC entry 2017 (class 2606 OID 319669)
+-- Name: examiner_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY examiner
+    ADD CONSTRAINT examiner_pkey PRIMARY KEY (id_visite, id_specialiste);
+
+
+--
+-- TOC entry 1999 (class 2606 OID 319572)
+-- Name: personnel_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY personnel
+    ADD CONSTRAINT personnel_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2005 (class 2606 OID 319586)
+-- Name: projet_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY projet
+    ADD CONSTRAINT projet_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2026 (class 2606 OID 319714)
+-- Name: proposition_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY proposition
+    ADD CONSTRAINT proposition_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1989 (class 2606 OID 319543)
+-- Name: secteur_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY secteur
+    ADD CONSTRAINT secteur_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1996 (class 2606 OID 319567)
+-- Name: specialiste_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY specialiste
+    ADD CONSTRAINT specialiste_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2011 (class 2606 OID 319634)
+-- Name: technique_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY technique
+    ADD CONSTRAINT technique_pkey PRIMARY KEY (id_visite);
+
+
+--
+-- TOC entry 1994 (class 2606 OID 319556)
+-- Name: terrain_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY terrain
+    ADD CONSTRAINT terrain_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2008 (class 2606 OID 319619)
+-- Name: visite_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY visite
+    ADD CONSTRAINT visite_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2027 (class 1259 OID 319740)
+-- Name: commerciale_FK_commerciale_id_projet; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX "commerciale_FK_commerciale_id_projet" ON commerciale USING btree (id_projet);
+
+
+--
+-- TOC entry 2021 (class 1259 OID 319706)
+-- Name: contact_FK_contact_id_client; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX "contact_FK_contact_id_client" ON contact USING btree (id_client);
+
+
+--
+-- TOC entry 2018 (class 1259 OID 319694)
+-- Name: contrainte_FK_contrainte_id_specialiste; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX "contrainte_FK_contrainte_id_specialiste" ON contrainte USING btree (id_specialiste);
+
+
+--
+-- TOC entry 2012 (class 1259 OID 319661)
+-- Name: envisager_FK_envisager_id_projet; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX "envisager_FK_envisager_id_projet" ON envisager USING btree (id_projet);
+
+
+--
+-- TOC entry 2015 (class 1259 OID 319680)
+-- Name: examiner_FK_examiner_id_specialiste; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX "examiner_FK_examiner_id_specialiste" ON examiner USING btree (id_specialiste);
+
+
+--
+-- TOC entry 1997 (class 1259 OID 319578)
+-- Name: personnel_FK_personnel_id_agence; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX "personnel_FK_personnel_id_agence" ON personnel USING btree (id_agence);
+
+
+--
+-- TOC entry 2000 (class 1259 OID 319610)
+-- Name: projet_FK_projet_id_client; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX "projet_FK_projet_id_client" ON projet USING btree (id_client);
+
+
+--
+-- TOC entry 2001 (class 1259 OID 319608)
+-- Name: projet_FK_projet_id_personnel; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX "projet_FK_projet_id_personnel" ON projet USING btree (id_personnel);
+
+
+--
+-- TOC entry 2002 (class 1259 OID 319609)
+-- Name: projet_FK_projet_id_personnel1; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX "projet_FK_projet_id_personnel1" ON projet USING btree (id_personnel1);
+
+
+--
+-- TOC entry 2003 (class 1259 OID 319607)
+-- Name: projet_FK_projet_id_terrain; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX "projet_FK_projet_id_terrain" ON projet USING btree (id_terrain);
+
+
+--
+-- TOC entry 2024 (class 1259 OID 319720)
+-- Name: proposition_FK_proposition_id_visite; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX "proposition_FK_proposition_id_visite" ON proposition USING btree (id_visite);
+
+
+--
+-- TOC entry 2009 (class 1259 OID 319645)
+-- Name: technique_FK_technique_id_projet; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX "technique_FK_technique_id_projet" ON technique USING btree (id_projet);
+
+
+--
+-- TOC entry 1992 (class 1259 OID 319562)
+-- Name: terrain_FK_terrain_id_secteur; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX "terrain_FK_terrain_id_secteur" ON terrain USING btree (id_secteur);
+
+
+--
+-- TOC entry 2006 (class 1259 OID 319625)
+-- Name: visite_FK_visite_id_projet; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX "visite_FK_visite_id_projet" ON visite USING btree (id_projet);
+
+
+--
+-- TOC entry 2046 (class 2606 OID 319730)
+-- Name: commerciale_id_projet_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY commerciale
+    ADD CONSTRAINT commerciale_id_projet_fkey FOREIGN KEY (id_projet) REFERENCES projet(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 2047 (class 2606 OID 319735)
+-- Name: commerciale_id_visite_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY commerciale
+    ADD CONSTRAINT commerciale_id_visite_fkey FOREIGN KEY (id_visite) REFERENCES visite(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 2044 (class 2606 OID 319701)
+-- Name: contact_id_client_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY contact
+    ADD CONSTRAINT contact_id_client_fkey FOREIGN KEY (id_client) REFERENCES client(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 2043 (class 2606 OID 319689)
+-- Name: contrainte_id_specialiste_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY contrainte
+    ADD CONSTRAINT contrainte_id_specialiste_fkey FOREIGN KEY (id_specialiste) REFERENCES specialiste(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 2039 (class 2606 OID 319651)
+-- Name: envisager_id_projet_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY envisager
+    ADD CONSTRAINT envisager_id_projet_fkey FOREIGN KEY (id_projet) REFERENCES projet(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 2040 (class 2606 OID 319656)
+-- Name: envisager_id_secteur_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY envisager
+    ADD CONSTRAINT envisager_id_secteur_fkey FOREIGN KEY (id_secteur) REFERENCES secteur(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 2041 (class 2606 OID 319670)
+-- Name: examiner_id_specialiste_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY examiner
+    ADD CONSTRAINT examiner_id_specialiste_fkey FOREIGN KEY (id_specialiste) REFERENCES specialiste(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 2042 (class 2606 OID 319675)
+-- Name: examiner_id_visite_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY examiner
+    ADD CONSTRAINT examiner_id_visite_fkey FOREIGN KEY (id_visite) REFERENCES visite(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 2031 (class 2606 OID 319573)
+-- Name: personnel_id_agence_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY personnel
+    ADD CONSTRAINT personnel_id_agence_fkey FOREIGN KEY (id_agence) REFERENCES agence(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 2032 (class 2606 OID 319587)
+-- Name: projet_id_client_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY projet
+    ADD CONSTRAINT projet_id_client_fkey FOREIGN KEY (id_client) REFERENCES client(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 2034 (class 2606 OID 319597)
+-- Name: projet_id_personnel1_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY projet
+    ADD CONSTRAINT projet_id_personnel1_fkey FOREIGN KEY (id_personnel1) REFERENCES personnel(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 2033 (class 2606 OID 319592)
+-- Name: projet_id_personnel_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY projet
+    ADD CONSTRAINT projet_id_personnel_fkey FOREIGN KEY (id_personnel) REFERENCES personnel(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 2035 (class 2606 OID 319602)
+-- Name: projet_id_terrain_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY projet
+    ADD CONSTRAINT projet_id_terrain_fkey FOREIGN KEY (id_terrain) REFERENCES terrain(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 2045 (class 2606 OID 319715)
+-- Name: proposition_id_visite_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY proposition
+    ADD CONSTRAINT proposition_id_visite_fkey FOREIGN KEY (id_visite) REFERENCES visite(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 2037 (class 2606 OID 319635)
+-- Name: technique_id_projet_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY technique
+    ADD CONSTRAINT technique_id_projet_fkey FOREIGN KEY (id_projet) REFERENCES projet(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 2038 (class 2606 OID 319640)
+-- Name: technique_id_visite_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY technique
+    ADD CONSTRAINT technique_id_visite_fkey FOREIGN KEY (id_visite) REFERENCES visite(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 2030 (class 2606 OID 319557)
+-- Name: terrain_id_secteur_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY terrain
+    ADD CONSTRAINT terrain_id_secteur_fkey FOREIGN KEY (id_secteur) REFERENCES secteur(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 2036 (class 2606 OID 319620)
+-- Name: visite_id_projet_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY visite
+    ADD CONSTRAINT visite_id_projet_fkey FOREIGN KEY (id_projet) REFERENCES projet(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 2070 (class 0 OID 0)
+-- Dependencies: 5
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+-- Completed on 2012-10-18 15:44:37
+
+--
+-- PostgreSQL database dump complete
+--
+
